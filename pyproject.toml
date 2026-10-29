@@ -20,7 +20,7 @@ dependencies = ["numpy", "scipy", "matplotlib"]
 dev = ["pytest", "pytest-cov"]
 
 [project.urls]
-Homepage = "https://github.com/jacksonwalters/SIGINT"
+Homepage = "https://github.com/walters-labs/sigint-examples"
 
 [project.scripts]
 sigint-workflow = "sigint_examples.basic_workflow:main"

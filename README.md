@@ -1,6 +1,6 @@
-# SIGINT
+# sigint-examples
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
-![basic-tests](https://github.com/jacksonwalters/SIGINT/actions/workflows/python-tests.yml/badge.svg)
+![basic-tests](https://github.com/walters-labs/sigint-examples/actions/workflows/python-tests.yml/badge.svg)
 ![PyPI version](https://img.shields.io/pypi/v/sigint-examples?logo=pypi)
 
 Explore signal intelligence techniques with runnable Python simulations. Each example generates a signal, analyzes it, and prints estimates. Add `--show-plots` to inspect the signals visually. No test runner is needed.
