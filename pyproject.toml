@@ -1,6 +1,6 @@
 [project]
 name = "sigint_examples"
-version = "0.1.2"
+version = "0.2.0"
 description = "Python SIGINT simulations and analysis tools"
 authors = [
     { name = "Jackson Walters", email = "jackson@jacksonwalters.com" }
