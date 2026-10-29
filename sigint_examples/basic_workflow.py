@@ -13,17 +13,7 @@ from sigint_examples.processing import matched_filter, autocorrelation, estimate
 from sigint_examples.plotting import plot_basic_workflow
 import argparse
 
-def main():
-    # Parse command-line arguments
-    parser = argparse.ArgumentParser(description="Run basic SIGINT workflow")
-    parser.add_argument(
-        "--show-plots",
-        action="store_true",
-        help="Display plots during execution"
-    )
-    args = parser.parse_args()
-    SHOW_PLOTS = args.show_plots
-
+def run(show_plots=False):
     # -----------------------------
     # Parameters
     # -----------------------------
@@ -47,6 +37,7 @@ def main():
     # -----------------------------
     mf_output = matched_filter(rx_signal, pulse_width, fs)
     auto, lags = autocorrelation(rx_signal)
+    lags = lags / fs
     PRI_estimate, peak_lags, auto_pos, lags_pos = estimate_PRI_from_autocorr(auto, lags)
 
     # Pulse width estimation using FWHM
@@ -69,7 +60,7 @@ def main():
     # -----------------------------
     # Plotting
     # -----------------------------
-    if SHOW_PLOTS:
+    if show_plots:
         plot_basic_workflow(
             t=t,
             rx_signal=rx_signal,
@@ -80,6 +71,13 @@ def main():
             peak_lags=peak_lags,
             pulse_width_estimates=[pulse_width_estimate]
         )
+
+def main():
+    parser = argparse.ArgumentParser(description="Run basic SIGINT workflow")
+    parser.add_argument("--show-plots", action="store_true", help="Display plots")
+    args = parser.parse_args()
+    run(show_plots=args.show_plots)
+
 
 if __name__ == "__main__":
     main()

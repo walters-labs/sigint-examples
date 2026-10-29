@@ -23,7 +23,7 @@ def plot_time_domain(t, signal, title="Signal", detected_peaks=None, zoom=None):
     plt.plot(t*1e3, signal, label="Signal")
     
     if detected_peaks is not None:
-        plt.plot(np.array(detected_peaks)*1e3, signal[np.array([int(ti*len(signal)/t[-1]) for ti in detected_peaks])],
+        plt.plot(np.array(detected_peaks)*1e3, np.interp(detected_peaks, t, signal),
                  "ro", label="Detected Peaks")
     
     if zoom is not None:
@@ -54,7 +54,7 @@ def plot_autocorr(lags, auto, title="Autocorrelation", peak_lags=None):
     plt.plot(lags*1e6, auto, label="Autocorrelation")
     if peak_lags is not None:
         plt.plot(np.array(peak_lags)*1e6,
-                 auto[np.array([int(p*len(auto)/lags[-1]) for p in peak_lags])],
+                 np.interp(peak_lags, lags, auto),
                  "ro", label="Detected Peaks")
     plt.title(title)
     plt.xlabel("Lag (µs)")

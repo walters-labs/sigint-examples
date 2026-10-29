@@ -10,4 +10,7 @@ def pytest_addoption(parser):
 
 @pytest.fixture
 def show_plots(request):
-    return request.config.getoption("--show-plots")
+    yield request.config.getoption("--show-plots")
+    # Headless backends retain figures after show(); release them between tests.
+    import matplotlib.pyplot as plt
+    plt.close("all")

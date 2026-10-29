@@ -1,6 +1,6 @@
 [project]
-name = "sigint_examples"          # your package name
-version = "0.1.2"                 # start with 0.1.0
+name = "sigint_examples"
+version = "0.1.2"
 description = "Python SIGINT simulations and analysis tools"
 authors = [
     { name = "Jackson Walters", email = "jackson@jacksonwalters.com" }
@@ -14,8 +14,21 @@ classifiers = [
     "Operating System :: OS Independent"
 ]
 
+dependencies = ["numpy", "scipy", "matplotlib"]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov"]
+
 [project.urls]
 Homepage = "https://github.com/jacksonwalters/SIGINT"
 
 [project.scripts]
 sigint-workflow = "sigint_examples.basic_workflow:main"
+sigint = "sigint_examples.cli:main"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["sigint_examples*"]

@@ -90,7 +90,7 @@ def add_awgn(signal, SNR_dB, seed=None, rng=None):
     noisy_signal : np.ndarray
     """
     if rng is None:
-        rng = np.random.default_rng()
+        rng = np.random.default_rng(seed)
 
     signal_power = np.mean(signal**2)
     SNR_linear = 10**(SNR_dB / 10)

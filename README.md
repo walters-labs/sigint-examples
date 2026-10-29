@@ -2,53 +2,74 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 ![basic-tests](https://github.com/jacksonwalters/SIGINT/actions/workflows/python-tests.yml/badge.svg)
 ![PyPI version](https://img.shields.io/pypi/v/sigint-examples?logo=pypi)
-![Python Version](https://img.shields.io/pypi/pyversions/sigint-examples)
 
-A collection of Python modules and tests serving as an introduction to SIGINT (signal intelligence) techniques.
+Explore signal intelligence techniques with runnable Python simulations. Each example generates a signal, analyzes it, and prints estimates. Add `--show-plots` to inspect the signals visually. No test runner is needed.
 
-## Installation
+## Get started
+
+Install this checkout in a virtual environment (includes NumPy, SciPy, and Matplotlib):
 
 ```bash
-pip install sigint-examples
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e .
+sigint list
+sigint run basic --show-plots
 ```
 
-To perform a basic workflow:
+On Windows, activate with `.venv\Scripts\activate` instead.
+
+## Run examples
 
 ```bash
-sigint-workflow --show-plots
+sigint run tdoa
+sigint run gaussian-jitter --show-plots
+sigint run two-pulse-trains --show-plots
 ```
 
-## Dependencies
+Without `--show-plots`, examples print results and finish without opening windows. Interactive plots require a graphical desktop and a Matplotlib GUI backend; close each plot window to continue through the example.
+
+| Example | What it demonstrates |
+| --- | --- |
+| `basic` | Carrier-modulated pulse train, matched filter, and pulse repetition interval (PRI) estimation |
+| `amplitude-modulation` | Pulses with varying amplitudes and autocorrelation analysis |
+| `chirped-pulses` | Matched filtering of linear chirps |
+| `irregular-pulses` | Pulse timing with uniform jitter |
+| `gaussian-jitter` | Gaussian timing jitter and PRI statistics with outlier removal |
+| `multi-emitter-jitter` | Two emitters with noise and timing jitter |
+| `noisy-multi-emitter` | Two fixed-PRI emitters in noise |
+| `tdoa` | Time difference of arrival between two receivers |
+| `two-pulse-trains` | Fundamental PRIs of two overlapping pulse trains |
+
+You can also use `python -m sigint_examples` in place of `sigint`:
 
 ```bash
-pip install -r requirements.txt
+python -m sigint_examples list
+python -m sigint_examples run chirped-pulses --show-plots
 ```
 
-## Testing
+The original `sigint-workflow --show-plots` and `python -m sigint_examples.basic_workflow --show-plots` commands still work.
+
+## Use from Python
+
+The workflows live in `sigint_examples/examples/`, separate from their tests. For example:
+
+```python
+from sigint_examples.examples.gaussian_jittered import run
+
+results = run(show_plots=False)
+print(results["mean_PRI_clean"])  # seconds
+```
+
+Simulation parameters are defined near the start of each workflow. These are introductory estimators; noise, jitter, harmonics, and sample resolution can affect the estimates. Time estimates use seconds internally, except the multi-emitter `fundamentals` arrays, which use microseconds. CLI output labels its units.
+
+## Development
+
+Tests check the same workflows that the CLI runs:
 
 ```bash
+python -m pip install -e '.[dev]'
 python -m pytest
 ```
 
-## Basic Workflow
-
-- `sigint_examples/basic_workflow.py`: generate pulse train, add Gaussian noise, use autocorrelation to estimate PRI
-
-```bash
-python -m sigint_examples.basic_workflow --show-plots
-```
-
-## Tests
-
-```
-python -m pytest tests/test_<specific-case>.py --show-plots
-```
-
-- `tests/test_amplitude_modulation.py`: generate a sequence of amplitude-moduled pulses, use filtering and autocorrelation to estimate PRI (pulse repitition interval)
-- `tests/test_chirped_pulses.py`: simulates a noisy train of linear chirped pulses, applies a matched filter and autocorrelation to analyze it, and then estimates the PRI and pulse width from the matched filter output
-- `tests/test_irregular_pulse_detection.py`: simulates a noisy pulse train with random PRI jitter, applies matched filtering and autocorrelation, and then estimates the mean and variability of the PRI from the detected pulses
-- `tests/test_gaussian_jittered.py`: simulates a noisy pulse train with Gaussian PRI jitter, detects the pulses using matched filtering, and estimates the mean and standard deviation of the PRI (with outlier rejection) while visualizing the signal, matched filter output, and PRI statistics over time
-- `tests/test_multi_emitter_noisy_jitter.py`: simulates two noisy pulse trains with different PRIs and jitter, combines them, and uses autocorrelation with peak detection and harmonic rejection to estimate the fundamental PRIs of both emitters
-- `tests/test_noisy_multi_emitter_jitter.py`: simulates two overlapping pulse trains with different PRIs in noise and uses smoothed autocorrelation with peak detection and harmonic rejection to estimate their fundamental PRIs
-- `tests/test_time_difference_of_arrival.py`: simulates two noisy pulse trains received at different times and estimates the delay between them using cross-correlation
-- `tests/test_two_pulse_trains.py`: simulates two overlapping pulse trains with different PRIs and uses autocorrelation with harmonic rejection to estimate their fundamental repetition intervals
+For optional visual debugging, use `python -m pytest --show-plots`. To exercise plotting on a headless machine, use `MPLBACKEND=Agg python -m pytest --show-plots`.
